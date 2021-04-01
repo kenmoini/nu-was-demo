@@ -1,0 +1,15 @@
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: was-demo-secure
+spec:
+  to:
+    kind: Service
+    name: was-demo-secure
+    weight: 100
+  port:
+    targetPort: 9443
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect
+  wildcardPolicy: None

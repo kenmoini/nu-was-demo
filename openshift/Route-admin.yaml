@@ -1,0 +1,12 @@
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: was-demo-admin
+spec:
+  to:
+    kind: Service
+    name: was-demo-admin
+    weight: 100
+  port:
+    targetPort: 9043
+  wildcardPolicy: None

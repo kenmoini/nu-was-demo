@@ -1,0 +1,12 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: was-demo-admin
+spec:
+  selector:
+    app: was-demo
+  ports:
+    - protocol: TCP
+      port: 9043
+      targetPort: 9043

@@ -1,0 +1,83 @@
+apiVersion: template.openshift.io/v1
+kind: Template
+metadata:
+  name: was-demo-template
+  annotations:
+    description: "WebSphere Application Server Demo on OpenShift"
+    tags: "websphere,liberty"
+objects:
+  - apiVersion: apps.openshift.io/v1
+    kind: DeploymentConfig
+    metadata:
+      annotations:
+        openshift.io/generated-by: OpenShiftNewApp
+      creationTimestamp: null
+      generation: 1
+      labels:
+        app: was-demo
+      name: was-demo
+    spec:
+      replicas: 1
+      revisionHistoryLimit: 10
+      selector:
+        app: was-demo
+        deploymentconfig: was-demo
+      strategy:
+        activeDeadlineSeconds: 21600
+        resources: {}
+        rollingParams:
+          intervalSeconds: 1
+          maxSurge: 25%
+          maxUnavailable: 25%
+          timeoutSeconds: 600
+          updatePeriodSeconds: 1
+        type: Rolling
+      template:
+        metadata:
+          annotations:
+            openshift.io/generated-by: OpenShiftNewApp
+          creationTimestamp: null
+          labels:
+            app: was-demo
+            deploymentconfig: was-demo
+        spec:
+          containers:
+            - image: kenmoini/was-demo
+              imagePullPolicy: Always
+              name: was-demo
+              ports:
+                - containerPort: 9080
+                  protocol: TCP
+              resources: {}
+              terminationMessagePath: /dev/termination-log
+              terminationMessagePolicy: File
+          dnsPolicy: ClusterFirst
+          restartPolicy: Always
+          schedulerName: default-scheduler
+          securityContext: {}
+          terminationGracePeriodSeconds: 30
+      test: false
+  - apiVersion: v1
+    kind: Service
+    metadata:
+      name: was-demo
+    spec:
+      selector:
+        app: was-demo
+      ports:
+        - protocol: TCP
+          port: 9080
+          targetPort: 9080
+  - kind: Route
+    apiVersion: route.openshift.io/v1
+    metadata:
+      name: was-demo
+    spec:
+      to:
+        kind: Service
+        name: was-demo
+        weight: 100
+      port:
+        targetPort: 9080
+      wildcardPolicy: None
+      path: /HelloWorld/hello

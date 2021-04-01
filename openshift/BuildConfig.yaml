@@ -1,0 +1,27 @@
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata:
+  creationTimestamp: null
+  labels:
+    name: was-demo
+  name: was-demo
+  nodeSelector: null
+spec:
+  output:
+    to:
+      kind: ImageStreamTag
+      name: was-demo:latest
+  postCommit: {}
+  resources: {}
+  runPolicy: Serial
+  source:
+    git:
+      uri: https://github.com/kenmoini/was-demo.git
+    type: Git
+  strategy:
+    type: Docker
+    dockerStrategy:
+      from:
+        kind: DockerImage
+        name: ibmcom/websphere-traditional:latest-ubi
+  triggers:
